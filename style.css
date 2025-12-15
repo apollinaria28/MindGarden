@@ -114,6 +114,7 @@ body {
     display: inline-block;
 }
 
+
 .btn:hover {
     transform: translateY(-2px);
     box-shadow: var(--shadow-lg);
@@ -197,6 +198,7 @@ body {
 .welcome-header h1 {
     font-family: 'Bebas-Neue';
     font-size: 3.7rem;
+    margin-top: 35px;
     font-weight: 400;
     color: var(--text-color);
     margin-bottom: 10px;
@@ -220,10 +222,11 @@ body {
 
 .name-input-section label {
     display: block;
-    font-weight: 500;
-    margin-bottom: 8px;
+    font-size: 1.3rem;
+    font-weight: 400;
     color: var(--text-color);
-    font-size: 1rem;
+    margin-bottom: 15px;
+    letter-spacing: 0.5px;
 }
 
 .name-input-section input {
@@ -255,7 +258,7 @@ body {
 
 .tags-selection h2 {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     font-weight: 400;
     color: var(--text-color);
     margin-bottom: 15px;
@@ -365,7 +368,13 @@ body {
 .first-launch .actions {
     margin-bottom: 30px;
 }
+#continueBtn{
+    margin-bottom: 20px;
+}
 
+.info-box{
+    margin-bottom: 30px;
+}
 /* Адаптация для мобильных */
 @media (max-width: 480px) {
     .first-launch {
