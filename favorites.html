@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Избранное - MindGarden</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+        <!-- Иконка для iOS -->
+    <link rel="apple-touch-icon" href="icons/icon-152x152.png">
+
+    <!-- Цвет адресной строки браузера -->
+    <meta name="theme-color" content="#667eea">
+
+    <!-- Для iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="MindGarden">
+
+    <!-- Для Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- Отключение телефонных ссылок -->
+    <meta name="format-detection" content="telephone=no">
+
+    <!-- Открывать ссылки в этом же приложении -->
+    <meta name="apple-touch-fullscreen" content="yes">
+</head>
+<body>
+    <div class="container">
+        <!-- Основной контент -->
+        <main class="main-content">
+            <div class="favorites-header">
+                <h1>Избранные цитаты</h1>
+                <p class="subtitle">Здесь хранятся ваши любимые цитаты</p>
+            </div>
+
+            <div class="favorites-list" id="favoritesList">
+                <!-- Избранные цитаты будут загружены динамически -->
+            </div>
+
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <div class="empty-icon">📭</div>
+                <h3>Пока нет избранных цитат</h3>
+                <p>Сохраняйте понравившиеся цитаты, нажимая на сердечко ❤️</p>
+                <a href="index.html" class="btn">Перейти к цитатам</a>
+            </div>
+        </main>
+
+        <!-- Нижняя навигация -->
+        <nav class="bottom-nav">
+            <a href="index.html" class="nav-item">
+                <span>🏠</span>
+                <span>Главная</span>
+            </a>
+            <a href="favorites.html" class="nav-item active">
+                <span>⭐</span>
+                <span>Избранное</span>
+            </a>
+            <a href="profile-settings.html" class="nav-item">
+                <span>👤</span>
+                <span>Профиль</span>
+            </a>
+        </nav>
+    </div>
+
+    <script src="db.js"></script>
+    <script>
+        async function loadFavorites() {
+            const db = await initDB();
+            const favorites = await db.getFavorites();
+            
+            const favoritesList = document.getElementById('favoritesList');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (favorites.length === 0) {
+                favoritesList.style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            favoritesList.style.display = 'block';
+            favoritesList.innerHTML = '';
+            
+            favorites.forEach((quote) => {
+                const quoteElement = createFavoriteQuoteElement(quote);
+                favoritesList.appendChild(quoteElement);
+            });
+        }
+        
+        function createFavoriteQuoteElement(quote) {
+            const div = document.createElement('div');
+            div.className = 'favorite-quote-card';
+            
+            const tagsHtml = quote.tags.map(tag => 
+                `<span class="quote-tag"> ${getTagName(tag)}</span>`
+            ).join('');
+            
+            div.innerHTML = `
+                <div class="favorite-quote-content">
+                    <p class="quote-text">${quote.text}</p>
+                    <p class="quote-author">— ${quote.author}</p>
+                    <div class="quote-tags">${tagsHtml}</div>
+                </div>
+                <div class="favorite-quote-actions">
+                    <button class="action-btn small copy-btn" title="Копировать цитату">
+                        <span>📋</span>
+                    </button>
+                    <button class="action-btn small remove-favorite-btn" title="Удалить из избранного">
+                        <span>🗑️</span>
+                    </button>
+                </div>
+            `;
+            
+            // Обработчики событий
+            const removeBtn = div.querySelector('.remove-favorite-btn');
+            const copyBtn = div.querySelector('.copy-btn');
+            
+            removeBtn.onclick = async () => {
+                if (confirm('Удалить цитату из избранного?')) {
+                    const db = await initDB();
+                    await db.removeFromFavorites(quote.id);
+                    await loadFavorites();
+                    showToast('Цитата удалена из избранного');
+                }
+            };
+            
+            copyBtn.onclick = () => {
+                const textToCopy = `${quote.text}\n— ${quote.author}`;
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    showToast('Цитата скопирована');
+                });
+            };
+            
+            return div;
+        }
+        
+        function getTagName(tagId) {
+            const names = {
+                'motivation': 'Мотивация',
+                'philosophy': 'Философия',
+                'success': 'Успех',
+                'wisdom': 'Мудрость',
+                'love': 'Любовь',
+                'life': 'Жизнь',
+                'inspiration': 'Вдохновение',
+                'happiness': 'Счастье',
+                'work': 'Работа',
+                'creativity': 'Креативность',
+                'nature': 'Природа',
+                'spirituality': 'Духовность'
+            };
+            return names[tagId] || tagId;
+        }
+        
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 80px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(0, 0, 0, 0.8);
+                color: white;
+                padding: 12px 24px;
+                border-radius: 20px;
+                z-index: 1000;
+                font-size: 14px;
+                animation: fadeInOut 3s ease-in-out;
+            `;
+            
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes fadeInOut {
+                    0% { opacity: 0; transform: translate(-50%, 20px); }
+                    10% { opacity: 1; transform: translate(-50%, 0); }
+                    90% { opacity: 1; transform: translate(-50%, 0); }
+                    100% { opacity: 0; transform: translate(-50%, -20px); }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+                style.remove();
+            }, 3000);
+        }
+        
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', async () => {
+            const db = await initDB();
+            const user = await db.getUser();
+            
+            if (!user) {
+                window.location.href = 'first-launch.html';
+                return;
+            }
+            
+            await loadFavorites();
+        });
+    </script>
+</body>
+</html>

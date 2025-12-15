@@ -1,0 +1,23 @@
+# .gitignore
+
+# Файлы IDE
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Временные файлы
+*.tmp
+*.temp
+*.log
+
+# Системные файлы
+Thumbs.db
+ehthumbs.db
+
+# Кэш
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

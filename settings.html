@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Настройки - MindGarden</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+        <!-- Иконка для iOS -->
+    <link rel="apple-touch-icon" href="icons/icon-152x152.png">
+
+    <!-- Цвет адресной строки браузера -->
+    <meta name="theme-color" content="#667eea">
+
+    <!-- Для iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="MindGarden">
+
+    <!-- Для Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- Отключение телефонных ссылок -->
+    <meta name="format-detection" content="telephone=no">
+
+    <!-- Открывать ссылки в этом же приложении -->
+    <meta name="apple-touch-fullscreen" content="yes">
+
+</head>
+<body>
+    <div class="container">
+        <!-- Шапка -->
+        <header class="header">
+            <div class="logo">
+                <span class="logo-icon">🌿</span>
+                <span class="logo-text">MindGarden</span>
+            </div>
+            <a href="index.html" class="back-btn">← Назад</a>
+        </header>
+
+        <!-- Основной контент -->
+        <main class="main-content">
+            <div class="settings-header">
+                <h1>⚙️ Настройки</h1>
+                <p class="subtitle">Настройте приложение под себя</p>
+            </div>
+
+            <div class="settings-sections">
+                <!-- Уведомления -->
+                <section class="settings-section">
+                    <h2>🔔 Уведомления</h2>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>Ежедневные уведомления</h4>
+                            <p>Получать цитату дня в указанное время</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="notificationsToggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>Время уведомлений</h4>
+                            <p>Выберите удобное время для получения цитаты</p>
+                        </div>
+                        <input type="time" id="notificationTime" class="time-input">
+                    </div>
+                </section>
+
+                <!-- Темы цитат -->
+                <section class="settings-section">
+                    <h2>🏷️ Темы цитат</h2>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>Выбранные темы</h4>
+                            <p>Изменение тем повлияет на отбираемые цитаты</p>
+                        </div>
+                        <button class="btn" id="changeTagsBtn">Изменить теги</button>
+                    </div>
+                    <div class="selected-tags" id="selectedTagsList">
+                        <!-- Выбранные теги будут показаны здесь -->
+                    </div>
+                </section>
+
+                <!-- Внешний вид -->
+                <section class="settings-section">
+                    <h2>🎨 Внешний вид</h2>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>Тема приложения</h4>
+                            <p>Светлая или темная тема</p>
+                        </div>
+                        <div class="theme-selector">
+                            <button class="theme-option" data-theme="light">
+                                <span>🌞</span> Светлая
+                            </button>
+                            <button class="theme-option" data-theme="dark">
+                                <span>🌙</span> Темная
+                            </button>
+                            <button class="theme-option" data-theme="auto">
+                                <span>⚙️</span> Авто
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Данные -->
+                <section class="settings-section">
+                    <h2>💾 Данные</h2>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>Экспорт данных</h4>
+                            <p>Скачайте резервную копию ваших данных</p>
+                        </div>
+                        <button class="btn-secondary" id="exportBtn">Экспорт</button>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>Импорт данных</h4>
+                            <p>Восстановите данные из резервной копии</p>
+                        </div>
+                        <button class="btn-secondary" id="importBtn">Импорт</button>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>Сброс данных</h4>
+                            <p>Удалить все данные и начать заново</p>
+                        </div>
+                        <button class="btn-danger" id="resetBtn">Сбросить всё</button>
+                    </div>
+                </section>
+
+                <!-- Информация -->
+                <section class="settings-section">
+                    <h2>ℹ️ Информация</h2>
+                    <div class="info-items">
+                        <div class="info-item">
+                            <span class="info-label">Версия приложения:</span>
+                            <span class="info-value">1.0.0</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Количество цитат:</span>
+                            <span class="info-value" id="totalQuotesCount">0</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Избранные цитаты:</span>
+                            <span class="info-value" id="favoritesCount">0</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Использовано места:</span>
+                            <span class="info-value" id="storageUsed">0 KB</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Юридическая информация -->
+                <section class="settings-section legal-section">
+                    <h2>⚖️ Юридическая информация</h2>
+                    <div class="legal-links">
+                        <a href="#" class="legal-link">Политика конфиденциальности</a>
+                        <a href="#" class="legal-link">Условия использования</a>
+                        <a href="#" class="legal-link">Отказ от ответственности</a>
+                        <a href="#" class="legal-link">Соответствие 152-ФЗ</a>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- Нижняя навигация -->
+        <nav class="bottom-nav">
+            <a href="index.html" class="nav-item">
+                <span>🏠</span>
+                <span>Главная</span>
+            </a>
+            <a href="favorites.html" class="nav-item">
+                <span>⭐</span>
+                <span>Избранное</span>
+            </a>
+            <a href="settings.html" class="nav-item active">
+                <span>⚙️</span>
+                <span>Настройки</span>
+            </a>
+        </nav>
+    </div>
+
+    <script src="db.js"></script>
+    <script>
+        async function loadSettings() {
+            const db = await initDB();
+            const user = await db.getUser();
+            const favorites = await db.getFavorites();
+            const allQuotes = await db.getAllQuotes();
+            
+            // Настройки уведомлений
+            const notificationsToggle = document.getElementById('notificationsToggle');
+            const notificationTime = document.getElementById('notificationTime');
+            
+            notificationsToggle.checked = user.settings.notifications;
+            notificationTime.value = user.settings.notificationTime;
+            
+            // Обновление времени уведомлений
+            notificationTime.onchange = async () => {
+                const updatedUser = {
+                    ...user,
+                    settings: {
+                        ...user.settings,
+                        notificationTime: notificationTime.value
+                    }
+                };
+                await db.saveUser(updatedUser);
+                showToast('Время уведомлений сохранено');
+            };
+            
+            // Включение/выключение уведомлений
+            notificationsToggle.onchange = async () => {
+                const updatedUser = {
+                    ...user,
+                    settings: {
+                        ...user.settings,
+                        notifications: notificationsToggle.checked
+                    }
+                };
+                await db.saveUser(updatedUser);
+                showToast(notificationsToggle.checked ? 
+                    'Уведомления включены' : 'Уведомления отключены');
+            };
+            
+            // Показать выбранные теги
+            await showSelectedTags(user.selectedTags);
+            
+            // Статистика
+            document.getElementById('totalQuotesCount').textContent = allQuotes.length;
+            document.getElementById('favoritesCount').textContent = favorites.length;
+            
+            // Использованное место
+            await calculateStorageUsage();
+            
+            // Тема приложения
+            loadThemeSettings(user.settings.theme);
+        }
+        
+        async function showSelectedTags(tags) {
+            const container = document.getElementById('selectedTagsList');
+            container.innerHTML = '';
+            
+            if (tags.length === 0) {
+                container.innerHTML = '<p class="no-tags">Теги не выбраны</p>';
+                return;
+            }
+            
+            tags.forEach(tag => {
+                const tagElement = document.createElement('span');
+                tagElement.className = 'selected-tag';
+                tagElement.innerHTML = `
+                    <span class="tag-emoji">${getTagEmoji(tag)}</span>
+                    <span class="tag-name">${getTagName(tag)}</span>
+                `;
+                container.appendChild(tagElement);
+            });
+        }
+        
+        function getTagName(tagId) {
+            const names = {
+                'motivation': 'Мотивация',
+                'philosophy': 'Философия',
+                'success': 'Успех',
+                'wisdom': 'Мудрость',
+                'love': 'Любовь',
+                'life': 'Жизнь',
+                'inspiration': 'Вдохновение',
+                'happiness': 'Счастье',
+                'work': 'Работа',
+                'creativity': 'Креативность',
+                'nature': 'Природа',
+                'spirituality': 'Духовность'
+            };
+            return names[tagId] || tagId;
+        }
+        
+        function loadThemeSettings(currentTheme) {
+            const themeOptions = document.querySelectorAll('.theme-option');
+            
+            themeOptions.forEach(option => {
+                option.classList.remove('active');
+                if (option.dataset.theme === currentTheme) {
+                    option.classList.add('active');
+                }
+                
+                option.onclick = async () => {
+                    const db = await initDB();
+                    const user = await db.getUser();
+                    
+                    const updatedUser = {
+                        ...user,
+                        settings: {
+                            ...user.settings,
+                            theme: option.dataset.theme
+                        }
+                    };
+                    
+                    await db.saveUser(updatedUser);
+                    applyTheme(option.dataset.theme);
+                    
+                    // Обновляем активную кнопку
+                    themeOptions.forEach(opt => opt.classList.remove('active'));
+                    option.classList.add('active');
+                    
+                    showToast('Тема изменена');
+                };
+            });
+        }
+        
+        function applyTheme(theme) {
+            if (theme === 'dark' || (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+        }
+        
+        async function calculateStorageUsage() {
+            if (navigator.storage && navigator.storage.estimate) {
+                const estimate = await navigator.storage.estimate();
+                const usedMB = Math.round(estimate.usage / 1024 / 1024 * 100) / 100;
+                const totalMB = Math.round(estimate.quota / 1024 / 1024 * 100) / 100;
+                
+                document.getElementById('storageUsed').textContent = 
+                    `${usedMB} MB из ${totalMB} MB`;
+            } else {
+                document.getElementById('storageUsed').textContent = 'Недоступно';
+            }
+        }
+        
+        async function exportData() {
+            const db = await initDB();
+            const user = await db.getUser();
+            const favorites = await db.getFavorites();
+            
+            const exportData = {
+                version: '1.0',
+                exportedAt: new Date().toISOString(),
+                user: user,
+                favorites: favorites.map(fav => fav.quoteId)
+            };
+            
+            const dataStr = JSON.stringify(exportData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `mindgarden-backup-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            
+            URL.revokeObjectURL(url);
+            showToast('Данные экспортированы');
+        }
+        
+        async function importData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            
+            input.onchange = async (event) => {
+                const file = event.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = async (e) => {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        
+                        if (data.version !== '1.0') {
+                            throw new Error('Неверная версия файла');
+                        }
+                        
+                        const db = await initDB();
+                        
+                        // Импортируем пользователя
+                        await db.saveUser(data.user);
+                        
+                        // Импортируем избранное
+                        for (const quoteId of data.favorites) {
+                            await db.addToFavorites(quoteId);
+                        }
+                        
+                        showToast('Данные успешно импортированы');
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1500);
+                        
+                    } catch (error) {
+                        alert('Ошибка импорта: ' + error.message);
+                    }
+                };
+                
+                reader.readAsText(file);
+            };
+            
+            input.click();
+        }
+        
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 80px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(0, 0, 0, 0.8);
+                color: white;
+                padding: 12px 24px;
+                border-radius: 20px;
+                z-index: 1000;
+                font-size: 14px;
+                animation: fadeInOut 3s ease-in-out;
+            `;
+            
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes fadeInOut {
+                    0% { opacity: 0; transform: translate(-50%, 20px); }
+                    10% { opacity: 1; transform: translate(-50%, 0); }
+                    90% { opacity: 1; transform: translate(-50%, 0); }
+                    100% { opacity: 0; transform: translate(-50%, -20px); }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+                style.remove();
+            }, 3000);
+        }
+        
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', async () => {
+            const db = await initDB();
+            const user = await db.getUser();
+            
+            if (!user) {
+                window.location.href = 'first-launch.html';
+                return;
+            }
+            
+            await loadSettings();
+            
+            // Обработчики кнопок
+            document.getElementById('changeTagsBtn').onclick = () => {
+                window.location.href = 'first-launch.html?edit=true';
+            };
+            
+            document.getElementById('exportBtn').onclick = exportData;
+            document.getElementById('importBtn').onclick = importData;
+            
+            document.getElementById('resetBtn').onclick = async () => {
+                if (confirm('ВНИМАНИЕ! Это удалит ВСЕ ваши данные без возможности восстановления. Продолжить?')) {
+                    indexedDB.deleteDatabase(DB_NAME);
+                    localStorage.clear();
+                    showToast('Данные удалены');
+                    setTimeout(() => {
+                        window.location.href = 'first-launch.html';
+                    }, 2000);
+                }
+            };
+        });
+    </script>
+</body>
+</html>

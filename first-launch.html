@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добро пожаловать в MindGarden</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+
+        <!-- Иконка для iOS -->
+    <link rel="apple-touch-icon" href="icons/icon-152x152.png">
+
+    <!-- Цвет адресной строки браузера -->
+    <meta name="theme-color" content="#667eea">
+
+    <!-- Для iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="MindGarden">
+
+    <!-- Для Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- Отключение телефонных ссылок -->
+    <meta name="format-detection" content="telephone=no">
+
+    <!-- Открывать ссылки в этом же приложении -->
+    <meta name="apple-touch-fullscreen" content="yes">
+
+</head>
+<body>
+    <div class="container first-launch">
+        <div class="welcome-header">
+            <h1>Добро пожаловать</h1>
+            <p class="hello">Великие цитаты<br> уже ждут тебя!</p>
+            
+        </div>
+
+        <div class="name-input-section">
+            <label for="username">Ваше имя</label>
+            <input type="text" id="username" placeholder="Как к вам обращаться?">
+        </div>
+
+        <div class="tags-selection">
+            <h2>Выберите интересующие темы</h2>
+            <p class="hint">Выберите одну или несколько тем:</p>
+            <div class="tags-container" id="tagsContainer">
+                <!-- Теги будут загружены динамически -->
+            </div>
+            <p class="selected-count">Выбрано: <span id="selectedCount">0</span> тем</p>
+        </div>
+
+        <div class="actions">
+            <button class="btn" id="continueBtn" disabled>Продолжить</button>
+            <button class="btn-secondary" id="skipBtn">Пропустить и использовать базовые темы</button>
+        </div>
+
+        <div class="info-box">
+            <p>💡 <strong>Совет:</strong> Вы всегда сможете изменить темы в настройках.</p>
+        </div>
+    </div>
+
+    <script src="db.js"></script>
+    <script>
+        // Список доступных тегов
+        const availableTags = [
+            { id: 'motivation', name: 'Мотивация',},
+            { id: 'philosophy', name: 'Философия'},
+            { id: 'success', name: 'Успех'},
+            { id: 'wisdom', name: 'Мудрость'},
+            { id: 'love', name: 'Любовь'},
+            { id: 'life', name: 'Жизнь'},
+            { id: 'inspiration', name: 'Вдохновение'},
+            { id: 'happiness', name: 'Счастье'},
+            { id: 'work', name: 'Работа'},
+            { id: 'creativity', name: 'Креативность'},
+            { id: 'nature', name: 'Природа'},
+            { id: 'spirituality', name: 'Духовность'}
+        ];
+
+        let selectedTags = [];
+
+        async function init() {
+            const tagsContainer = document.getElementById('tagsContainer');
+            
+            // Отображаем все теги
+            availableTags.forEach(tag => {
+                const tagElement = document.createElement('div');
+                tagElement.className = 'tag-select';
+                tagElement.innerHTML = `
+                    <input type="checkbox" id="tag_${tag.id}" value="${tag.id}">
+                    <label for="tag_${tag.id}">
+                        <span class="tag-name">${tag.name}</span>
+                    </label>
+                `;
+                
+                tagElement.querySelector('input').addEventListener('change', function() {
+                    if (this.checked) {
+                        selectedTags.push(tag.id);
+                    } else {
+                        selectedTags = selectedTags.filter(t => t !== tag.id);
+                    }
+                    updateSelectedCount();
+                });
+                
+                tagsContainer.appendChild(tagElement);
+            });
+            
+            // Кнопка продолжить
+            document.getElementById('continueBtn').addEventListener('click', async () => {
+                await saveUserSelection();
+                window.location.href = 'index.html';
+            });
+            
+            // Кнопка пропустить
+            document.getElementById('skipBtn').addEventListener('click', async () => {
+                selectedTags = ['motivation', 'inspiration', 'wisdom']; // Базовые теги
+                await saveUserSelection();
+                window.location.href = 'index.html';
+            });
+        }
+        
+        function updateSelectedCount() {
+            const count = selectedTags.length;
+            document.getElementById('selectedCount').textContent = count;
+            document.getElementById('continueBtn').disabled = count === 0;
+        }
+        
+        async function saveUserSelection() {
+            const username = document.getElementById('username').value.trim() || 'Пользователь';
+            
+            // Открываем базу данных
+            const db = await initDB();
+            
+            // Создаем пользователя
+            await db.saveUser({
+                username: username,
+                selectedTags: selectedTags,
+                settings: {
+                    notifications: true,
+                    notificationTime: '09:00',
+                    theme: 'light'
+                },
+                createdAt: new Date().toISOString(),
+                stats: {
+                    quotesReceived: 0,
+                    favoritesCount: 0,
+                    lastQuoteDate: null
+                }
+            });
+            
+            // Загружаем цитаты в базу
+            await loadQuotes();
+        }
+        
+        async function loadQuotes() {
+            try {
+                const response = await fetch('quotes.json');
+                const quotes = await response.json();
+                
+                const db = await initDB();
+                await db.saveQuotes(quotes);
+                
+                console.log('Цитаты загружены в базу данных');
+            } catch (error) {
+                console.error('Ошибка загрузки цитат:', error);
+            }
+        }
+        
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

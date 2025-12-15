@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль и настройки - MindGarden</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+
+</head>
+<body>
+    <div class="container profile-settings">
+        <!-- Шапка -->
+        <header class="header">
+            <a href="index.html" class="back-btn">← Назад</a>
+            <div class="header-title">Профиль и настройки</div>
+            <div style="width: 44px;"></div> <!-- Пустой элемент для выравнивания -->
+        </header>
+
+        <!-- Основной контент -->
+        <main class="main-content">
+            <!-- Секция профиля -->
+            <section class="profile-section">
+                <div class="profile-header">
+                    <div class="profile-avatar">👤</div>
+                    <div class="profile-info-main">
+                        <h2 id="profileUsername">Загрузка...</h2>
+                        <p class="profile-join-date">Присоединился: <span id="joinDate">—</span></p>
+                    </div>
+                </div>
+
+                <div class="profile-stats-cards">
+                    <div class="stat-card">
+                        <div class="stat-icon">⭐</div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="favoritesCount">0</div>
+                            <div class="stat-label">Избранных цитат</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🏷️</div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="tagsCount">0</div>
+                            <div class="stat-label">Выбранных тегов</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📊</div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="quotesReceived">0</div>
+                            <div class="stat-label">Получено цитат</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Выбранные теги -->
+                <div class="profile-tags-section">
+                    <div class="section-header">
+                        <h3>Выбранные теги</h3>
+                        <button class="btn-small" id="editTagsBtn">Изменить</button>
+                    </div>
+                    <div class="selected-tags-list" id="selectedTagsList">
+                        <!-- Теги будут загружены динамически -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Секция настроек -->
+            <section class="settings-section">
+                <h2>⚙️ Настройки приложения</h2>
+
+                <!-- Уведомления -->
+                <div class="settings-group">
+                    <h3>🔔 Уведомления</h3>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>Ежедневные уведомления</h4>
+                            <p>Получать цитату дня в указанное время</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="notificationsToggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>Время уведомлений</h4>
+                            <p>Выберите удобное время</p>
+                        </div>
+                        <input type="time" id="notificationTime" class="time-input">
+                    </div>
+                </div>
+
+                <!-- Внешний вид -->
+                <div class="settings-group">
+                    <h3>🎨 Внешний вид</h3>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>Тема приложения</h4>
+                            <p>Светлая или темная тема</p>
+                        </div>
+                        <div class="theme-selector">
+                            <button class="theme-option" data-theme="light">
+                                <span>🌞</span> Светлая
+                            </button>
+                            <button class="theme-option" data-theme="dark">
+                                <span>🌙</span> Темная
+                            </button>
+                            <button class="theme-option" data-theme="auto">
+                                <span>⚙️</span> Авто
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Данные -->
+                <div class="settings-group">
+                    <h3>💾 Данные</h3>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>Экспорт данных</h4>
+                            <p>Скачайте резервную копию ваших данных</p>
+                        </div>
+                        <button class="btn-secondary" id="exportBtn">Экспорт</button>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>Импорт данных</h4>
+                            <p>Восстановите данные из резервной копии</p>
+                        </div>
+                        <button class="btn-secondary" id="importBtn">Импорт</button>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>Сброс данных</h4>
+                            <p>Удалить все данные и начать заново</p>
+                        </div>
+                        <button class="btn-danger" id="resetBtn">Сбросить всё</button>
+                    </div>
+                </div>
+
+                <!-- Информация о приложении -->
+                <div class="settings-group">
+                    <h3>ℹ️ О приложении</h3>
+                    
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Версия приложения:</span>
+                            <span class="info-value">1.0.0</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Количество цитат:</span>
+                            <span class="info-value" id="totalQuotesCount">0</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Использовано места:</span>
+                            <span class="info-value" id="storageUsed">0 KB</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Разработчик:</span>
+                            <span class="info-value">MindGarden Team</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Юридическая информация -->
+                <div class="settings-group legal-group">
+                    <h3>⚖️ Юридическая информация</h3>
+                    
+                    <div class="legal-links">
+                        <a href="#" class="legal-link" onclick="showLegalInfo('privacy')">Политика конфиденциальности</a>
+                        <a href="#" class="legal-link" onclick="showLegalInfo('terms')">Условия использования</a>
+                        <a href="#" class="legal-link" onclick="showLegalInfo('disclaimer')">Отказ от ответственности</a>
+                        <a href="#" class="legal-link" onclick="showLegalInfo('personal_data')">Соответствие 152-ФЗ</a>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Нижняя навигация -->
+        <nav class="bottom-nav">
+            <a href="index.html" class="nav-item">
+                <span>🏠</span>
+                <span>Главная</span>
+            </a>
+            <a href="favorites.html" class="nav-item">
+                <span>⭐</span>
+                <span>Избранное</span>
+            </a>
+            <a href="profile-settings.html" class="nav-item active">
+                <span>👤</span>
+                <span>Профиль</span>
+            </a>
+        </nav>
+
+        <!-- Модальное окно юридической информации -->
+        <div class="modal" id="legalModal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="legalModalTitle">Политика конфиденциальности</h3>
+                    <button class="close-modal" id="closeLegalModal">✕</button>
+                </div>
+                <div class="modal-body">
+                    <div id="legalModalContent">
+                        <!-- Содержание будет загружено динамически -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Добавьте этот код сразу после закрывающего тега </div> модального окна legalModal -->
+
+    <!-- Модальное окно редактирования тегов -->
+    <div class="modal" id="editTagsModal" style="display: none;">
+        <div class="modal-content tags-modal">
+            <div class="modal-header">
+                <h3>Выберите интересующие теги</h3>
+                <button class="close-modal" id="closeEditTagsModal">✕</button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-description">Отметьте теги, которые вас интересуют. Вы можете выбрать несколько.</p>
+                
+                <div class="tags-selection-container" id="editTagsContainer">
+                    <!-- Теги будут загружены динамически -->
+                </div>
+                
+                <div class="selected-tags-preview">
+                    <h4>Выбрано тегов: <span id="selectedTagsCount">0</span></h4>
+                    <div class="selected-tags-list-preview" id="selectedTagsPreview">
+                        <!-- Выбранные теги будут показаны здесь -->
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button class="btn btn-secondary" id="cancelEditTagsBtn">Отмена</button>
+                    <button class="btn btn-primary" id="saveTagsBtn">Сохранить изменения</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="db.js"></script>
+    <script src="app.js"></script>
+    <script>
+        // Данные для юридической информации
+        const legalTexts = {
+            privacy: {
+                title: "Политика конфиденциальности",
+                content: `
+                    <h4>1. Сбор и использование данных</h4>
+                    <p>Приложение MindGarden собирает и хранит следующие данные локально на вашем устройстве:</p>
+                    <ul>
+                        <li>Имя пользователя (если указано)</li>
+                        <li>Выбранные темы (теги)</li>
+                        <li>Избранные цитаты</li>
+                        <li>Настройки уведомлений</li>
+                        <li>История просмотра цитат</li>
+                    </ul>
+                    
+                    <h4>2. Локальное хранение</h4>
+                    <p>Все данные хранятся исключительно на вашем устройстве в IndexedDB. 
+                    Мы не передаем и не сохраняем ваши данные на внешних серверах.</p>
+                    
+                    <h4>3. Уведомления</h4>
+                    <p>Для работы уведомлений приложение запрашивает разрешение на их отправку.
+                    Уведомления создаются локально и не требуют передачи данных на сервер.</p>
+                    
+                    <h4>4. Безопасность</h4>
+                    <p>Ваши данные защищены стандартными механизмами безопасности браузера.</p>
+                `
+            },
+            terms: {
+                title: "Условия использования",
+                content: `
+                    <h4>1. Принятие условий</h4>
+                    <p>Используя приложение MindGarden, вы соглашаетесь с настоящими условиями.</p>
+                    
+                    <h4>2. Использование контента</h4>
+                    <p>Все цитаты предоставляются для личного некоммерческого использования.
+                    Цитаты могут быть защищены авторским правом или находиться в общественном достоянии.</p>
+                    
+                    <h4>3. Ограничения</h4>
+                    <p>Запрещается использовать приложение для:</p>
+                    <ul>
+                        <li>Распространения вредоносного контента</li>
+                        <li>Нарушения авторских прав</li>
+                        <li>Любых незаконных действий</li>
+                    </ul>
+                    
+                    <h4>4. Изменения условий</h4>
+                    <p>Мы оставляем за собой право изменять условия использования.</p>
+                `
+            },
+            disclaimer: {
+                title: "Отказ от ответственности",
+                content: `
+                    <h4>1. Ограничение ответственности</h4>
+                    <p>Приложение MindGarden предоставляется "как есть". Мы не гарантируем:</p>
+                    <ul>
+                        <li>Бесперебойную работу приложения</li>
+                        <li>Отсутствие ошибок</li>
+                        <li>Соответствие вашим ожиданиям</li>
+                    </ul>
+                    
+                    <h4>2. Контент цитат</h4>
+                    <p>Мы не несем ответственности за содержание цитат.
+                    Цитаты предоставляются в информационных целях.</p>
+                    
+                    <h4>3. Потеря данных</h4>
+                    <p>В случае сброса данных устройства или удаления приложения
+                    все ваши данные будут утеряны без возможности восстановления.</p>
+                    
+                    <h4>4. Внешние ссылки</h4>
+                    <p>Приложение не содержит внешних ссылок и не взаимодействует с серверами.</p>
+                `
+            },
+            personal_data: {
+                title: "Соответствие 152-ФЗ",
+                content: `
+                    <h4>1. Соответствие законодательству</h4>
+                    <p>Приложение MindGarden соответствует требованиям Федерального закона 
+                    от 27.07.2006 N 152-ФЗ "О персональных данных".</p>
+                    
+                    <h4>2. Обработка персональных данных</h4>
+                    <p>В соответствии со статьей 3 152-ФЗ, приложение обрабатывает минимальный
+                    объем персональных данных, необходимый для функционирования.</p>
+                    
+                    <h4>3. Принципы обработки</h4>
+                    <p>Обработка данных осуществляется на следующих принципах:</p>
+                    <ul>
+                        <li>Законности и справедливости</li>
+                        <li>Ограничения обработки установленными целями</li>
+                        <li>Достаточности для достижения целей</li>
+                        <li>Локальности хранения</li>
+                    </ul>
+                    
+                    <h4>4. Безопасность данных</h4>
+                    <p>Все персональные данные хранятся локально на устройстве пользователя
+                    и не передаются третьим лицам.</p>
+                `
+            }
+        };
+        // Функция показа уведомлений
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 80px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(0, 0, 0, 0.8);
+                color: white;
+                padding: 12px 24px;
+                border-radius: 20px;
+                z-index: 1000;
+                font-size: 14px;
+                animation: fadeInOut 3s ease-in-out;
+            `;
+            
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes fadeInOut {
+                    0% { opacity: 0; transform: translate(-50%, 20px); }
+                    10% { opacity: 1; transform: translate(-50%, 0); }
+                    90% { opacity: 1; transform: translate(-50%, 0); }
+                    100% { opacity: 0; transform: translate(-50%, -20px); }
+                }
+            `;
+            document.head.appendChild(style);
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+                style.remove();
+            }, 3000);
+        }
+
+        async function initProfileSettings() {
+            console.log('Инициализация страницы профиля и настроек...');
+            
+            try {
+                const db = await initDB();
+                const user = await db.getUser();
+                
+                if (!user) {
+                    window.location.href = 'first-launch.html';
+                    return;
+                }
+                
+                // Загружаем профиль
+                await loadProfile(user, db);
+                
+                // Загружаем настройки
+                await loadSettings(user, db);
+                
+                // Инициализируем обработчики
+                await initEventHandlers(db);
+                
+                console.log('Профиль и настройки инициализированы');
+                
+            } catch (error) {
+                console.error('Ошибка инициализации:', error);
+                showToast('Ошибка загрузки страницы');
+            }
+        }
+
+        async function loadProfile(user, db) {
+            console.log('Загрузка профиля пользователя:', user.username);
+            
+            // Основная информация
+            document.getElementById('profileUsername').textContent = user.username || 'Пользователь';
+            
+            if (user.createdAt) {
+                const joinDate = new Date(user.createdAt);
+                document.getElementById('joinDate').textContent = joinDate.toLocaleDateString('ru-RU');
+            }
+            
+            // Статистика
+            const favorites = await db.getFavorites();
+            document.getElementById('favoritesCount').textContent = favorites.length;
+            
+            const tagsCount = user.selectedTags ? user.selectedTags.length : 0;
+            document.getElementById('tagsCount').textContent = tagsCount;
+            
+            const quotesReceived = user.stats?.quotesReceived || 0;
+            document.getElementById('quotesReceived').textContent = quotesReceived;
+            
+            // Выбранные теги
+            await showSelectedTags(user.selectedTags || []);
+            
+            // Общая статистика
+            const allQuotes = await db.getAllQuotes();
+            document.getElementById('totalQuotesCount').textContent = allQuotes.length;
+            
+            // Использованное место
+            await calculateStorageUsage();
+        }
+
+        async function showSelectedTags(tags) {
+            const container = document.getElementById('selectedTagsList');
+            container.innerHTML = '';
+            
+            if (tags.length === 0) {
+                container.innerHTML = '<p class="no-tags">Теги не выбраны</p>';
+                return;
+            }
+            
+            tags.forEach(tag => {
+                const tagElement = document.createElement('div');
+                tagElement.className = 'profile-tag';
+                tagElement.innerHTML = `
+                    <span class="profile-tag-name">${getTagName(tag)}
+                `;
+                container.appendChild(tagElement);
+            });
+        }
+
+        // Функция для загрузки тегов в модальное окно - БЕЗ СМАЙЛИКОВ
+        async function loadTagsForEditing(selectedTags = []) {
+            console.log('Загрузка тегов для редактирования. Выбрано:', selectedTags);
+            
+            const container = document.getElementById('editTagsContainer');
+            const previewContainer = document.getElementById('selectedTagsPreview');
+            const countElement = document.getElementById('selectedTagsCount');
+            
+            container.innerHTML = '';
+            previewContainer.innerHTML = '';
+            
+            try {
+                // Получаем все доступные теги
+                const db = await initDB();
+                const allTags = await db.getAllTags();
+                
+                console.log('Все доступные теги:', allTags);
+                
+                if (allTags.length === 0) {
+                    container.innerHTML = '<p class="no-tags">Нет доступных тегов</p>';
+                    return;
+                }
+                
+                // Создаем кнопки для каждого тега - БЕЗ СМАЙЛИКОВ
+                allTags.forEach(tag => {
+                    const isSelected = selectedTags.includes(tag);
+                    const tagElement = document.createElement('button');
+                    tagElement.className = `tag-option-btn ${isSelected ? 'selected' : ''}`;
+                    tagElement.type = 'button';
+                    tagElement.dataset.tag = tag;
+                    
+                    // УБИРАЕМ СМАЙЛИКИ, ОСТАВЛЯЕМ ТОЛЬКО ТЕКСТ
+                    tagElement.innerHTML = `
+                        <span class="tag-checkbox">${isSelected ? '✓' : ''}</span>
+                        <span class="tag-name">${getTagName(tag)}</span>
+                    `;
+                    
+                    tagElement.onclick = () => {
+                        // Переключаем выбор
+                        tagElement.classList.toggle('selected');
+                        const checkbox = tagElement.querySelector('.tag-checkbox');
+                        checkbox.textContent = tagElement.classList.contains('selected') ? '✓' : '';
+                        
+                        // Обновляем превью
+                        updateTagsPreview();
+                    };
+                    
+                    container.appendChild(tagElement);
+                });
+                
+                // Функция обновления превью выбранных тегов
+                function updateTagsPreview() {
+                    const selectedTags = Array.from(document.querySelectorAll('.tag-option-btn.selected'))
+                        .map(btn => btn.dataset.tag);
+                    
+                    // Обновляем счетчик
+                    countElement.textContent = selectedTags.length;
+                    
+                    // Обновляем превью - БЕЗ СМАЙЛИКОВ
+                    previewContainer.innerHTML = '';
+                    
+                    if (selectedTags.length === 0) {
+                        previewContainer.innerHTML = '<p class="no-tags-selected">Теги не выбраны</p>';
+                    } else {
+                        selectedTags.forEach(tag => {
+                            const previewTag = document.createElement('span');
+                            previewTag.className = 'selected-tag-preview';
+                            // УБИРАЕМ СМАЙЛИКИ В ПРЕВЬЮ
+                            previewTag.innerHTML = `<span>${getTagName(tag)}</span>`;
+                            previewContainer.appendChild(previewTag);
+                        });
+                    }
+                }
+                
+                // Инициализируем превью
+                updateTagsPreview();
+                
+            } catch (error) {
+                console.error('Ошибка загрузки тегов:', error);
+                container.innerHTML = '<p class="error">Ошибка загрузки тегов</p>';
+            }
+        }
+
+        async function loadSettings(user, db) {
+            // Настройки уведомлений
+            const notificationsToggle = document.getElementById('notificationsToggle');
+            const notificationTime = document.getElementById('notificationTime');
+            
+            notificationsToggle.checked = user.settings?.notifications !== false;
+            notificationTime.value = user.settings?.notificationTime || '09:00';
+            
+            // Тема приложения
+            const currentTheme = user.settings?.theme || 'light';
+            loadThemeSettings(currentTheme);
+        }
+
+        function loadThemeSettings(currentTheme) {
+            const themeOptions = document.querySelectorAll('.theme-option');
+            
+            themeOptions.forEach(option => {
+                option.classList.remove('active');
+                if (option.dataset.theme === currentTheme) {
+                    option.classList.add('active');
+                }
+                
+                option.onclick = async () => {
+                    const db = await initDB();
+                    const user = await db.getUser();
+                    
+                    const updatedUser = {
+                        ...user,
+                        settings: {
+                            ...user.settings,
+                            theme: option.dataset.theme
+                        }
+                    };
+                    
+                    await db.saveUser(updatedUser);
+                    applyTheme(option.dataset.theme);
+                    
+                    themeOptions.forEach(opt => opt.classList.remove('active'));
+                    option.classList.add('active');
+                    
+                    showToast('Тема изменена');
+                };
+            });
+        }
+
+        function applyTheme(theme) {
+            if (theme === 'dark' || (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+        }
+
+        async function calculateStorageUsage() {
+            if (navigator.storage && navigator.storage.estimate) {
+                try {
+                    const estimate = await navigator.storage.estimate();
+                    const usedMB = Math.round(estimate.usage / 1024 / 1024 * 100) / 100;
+                    document.getElementById('storageUsed').textContent = `${usedMB} MB`;
+                } catch (error) {
+                    document.getElementById('storageUsed').textContent = 'Недоступно';
+                }
+            } else {
+                document.getElementById('storageUsed').textContent = 'Недоступно';
+            }
+        }
+
+        async function initEventHandlers(db) {
+            console.log('Инициализация обработчиков событий...');
+            
+            // Редактирование тегов - открывает модальное окно
+            const editTagsBtn = document.getElementById('editTagsBtn');
+            if (editTagsBtn) {
+                editTagsBtn.onclick = async () => {
+                    console.log('Клик по кнопке редактирования тегов');
+                    try {
+                        const user = await db.getUser();
+                        await loadTagsForEditing(user.selectedTags || []);
+                        document.getElementById('editTagsModal').style.display = 'flex';
+                        console.log('Модальное окно тегов открыто');
+                    } catch (error) {
+                        console.error('Ошибка открытия модального окна тегов:', error);
+                        showToast('Ошибка открытия редактора тегов');
+                    }
+                };
+            }
+            
+            // Закрытие модального окна редактирования тегов
+            const closeEditBtn = document.getElementById('closeEditTagsModal');
+            if (closeEditBtn) {
+                closeEditBtn.onclick = () => {
+                    document.getElementById('editTagsModal').style.display = 'none';
+                };
+            }
+            
+            const cancelEditBtn = document.getElementById('cancelEditTagsBtn');
+            if (cancelEditBtn) {
+                cancelEditBtn.onclick = () => {
+                    document.getElementById('editTagsModal').style.display = 'none';
+                };
+            }
+            
+            // Сохранение выбранных тегов
+            const saveTagsBtn = document.getElementById('saveTagsBtn');
+            if (saveTagsBtn) {
+                saveTagsBtn.onclick = async () => {
+                    try {
+                        const selectedTags = Array.from(document.querySelectorAll('.tag-option-btn.selected'))
+                            .map(btn => btn.dataset.tag);
+                        
+                        console.log('Сохранение тегов:', selectedTags);
+                        
+                        if (selectedTags.length === 0) {
+                            showToast('Выберите хотя бы один тег');
+                            return;
+                        }
+                        
+                        const user = await db.getUser();
+                        const updatedUser = {
+                            ...user,
+                            selectedTags: selectedTags,
+                            updatedAt: new Date().toISOString()
+                        };
+                        
+                        await db.saveUser(updatedUser);
+                        
+                        // Обновляем отображение тегов в профиле
+                        await showSelectedTags(selectedTags);
+                        
+                        // Обновляем счетчик тегов
+                        document.getElementById('tagsCount').textContent = selectedTags.length;
+                        
+                        // Закрываем модальное окно
+                        document.getElementById('editTagsModal').style.display = 'none';
+                        
+                        showToast('Теги успешно обновлены!');
+                        
+                    } catch (error) {
+                        console.error('Ошибка сохранения тегов:', error);
+                        showToast('Ошибка сохранения тегов');
+                    }
+                };
+            }
+            
+            // Закрытие модальных окон по клику вне их
+            window.onclick = (event) => {
+                const legalModal = document.getElementById('legalModal');
+                const editTagsModal = document.getElementById('editTagsModal');
+                
+                if (event.target === legalModal) {
+                    legalModal.style.display = 'none';
+                }
+                
+                if (event.target === editTagsModal) {
+                    editTagsModal.style.display = 'none';
+                }
+            };
+            
+            // Уведомления
+            const notificationsToggle = document.getElementById('notificationsToggle');
+            if (notificationsToggle) {
+                notificationsToggle.onchange = async () => {
+                    const user = await db.getUser();
+                    const updatedUser = {
+                        ...user,
+                        settings: {
+                            ...user.settings,
+                            notifications: notificationsToggle.checked
+                        }
+                    };
+                    await db.saveUser(updatedUser);
+                    showToast('Настройки уведомлений сохранены');
+                };
+            }
+            
+            // Время уведомлений
+            const notificationTime = document.getElementById('notificationTime');
+            if (notificationTime) {
+                notificationTime.onchange = async () => {
+                    const user = await db.getUser();
+                    const updatedUser = {
+                        ...user,
+                        settings: {
+                            ...user.settings,
+                            notificationTime: notificationTime.value
+                        }
+                    };
+                    await db.saveUser(updatedUser);
+                    showToast('Время уведомлений обновлено');
+                };
+            }
+            
+            // Экспорт данных
+            const exportBtn = document.getElementById('exportBtn');
+            if (exportBtn) {
+                exportBtn.onclick = async () => {
+                    const db = await initDB();
+                    const user = await db.getUser();
+                    const favorites = await db.getFavorites();
+                    
+                    const data = {
+                        user: user,
+                        favorites: favorites,
+                        exportDate: new Date().toISOString()
+                    };
+                    
+                    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `mindgarden-backup-${new Date().toISOString().split('T')[0]}.json`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    
+                    showToast('Данные экспортированы');
+                };
+            }
+            
+            // Импорт данных
+            const importBtn = document.getElementById('importBtn');
+            if (importBtn) {
+                importBtn.onclick = () => {
+                    showToast('Функция импорта в разработке');
+                };
+            }
+            
+            // Сброс данных
+            const resetBtn = document.getElementById('resetBtn');
+            if (resetBtn) {
+                resetBtn.onclick = async () => {
+                    if (confirm('ВНИМАНИЕ! Это удалит ВСЕ ваши данные без возможности восстановления. Продолжить?')) {
+                        indexedDB.deleteDatabase('MindGardenDB');
+                        localStorage.clear();
+                        showToast('Данные удалены');
+                        setTimeout(() => {
+                            window.location.href = 'first-launch.html';
+                        }, 2000);
+                    }
+                };
+            }
+            
+            // Юридическая информация
+            const closeLegalModal = document.getElementById('closeLegalModal');
+            if (closeLegalModal) {
+                closeLegalModal.onclick = () => {
+                    document.getElementById('legalModal').style.display = 'none';
+                };
+            }
+        }
+
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', initProfileSettings);
+    </script>
+        <div class="modal" id="editTagsModal" style="display: none;">
+            <div class="modal-content tags-modal">
+                <div class="modal-header">
+                    <h3>Выберите интересующие теги</h3>
+                    <button class="close-modal" id="closeEditTagsModal">✕</button>
+                </div>
+                <div class="modal-body">
+                    <p class="modal-description">Отметьте теги, которые вас интересуют. Вы можете выбрать несколько.</p>
+                    
+                    <div class="tags-selection-container" id="editTagsContainer">
+                        <!-- Теги будут загружены динамически -->
+                    </div>
+                    
+                    <div class="selected-tags-preview">
+                        <h4>Выбрано тегов: <span id="selectedTagsCount">0</span></h4>
+                        <div class="selected-tags-list-preview" id="selectedTagsPreview">
+
+                        </div>
+                    </div>
+                    
+                    <div class="modal-actions">
+                        <button class="btn btn-secondary" id="cancelEditTagsBtn">Отмена</button>
+                        <button class="btn btn-primary" id="saveTagsBtn">Сохранить изменения</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+</body>
+</html>

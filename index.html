@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindGarden - Ваш сад цитат</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="icons/icon-72x72.png">
+    <link rel="apple-touch-icon" href="icons/icon-152x152.png">
+    <meta name="theme-color" content="#667eea">
+
+
+
+    <!-- Иконка для iOS -->
+    <link rel="apple-touch-icon" href="icons/icon-152x152.png">
+
+    <!-- Цвет адресной строки браузера -->
+    <meta name="theme-color" content="#667eea">
+
+    <!-- Для iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="MindGarden">
+
+    <!-- Для Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- Отключение телефонных ссылок -->
+    <meta name="format-detection" content="telephone=no">
+
+    <!-- Открывать ссылки в этом же приложении -->
+    <meta name="apple-touch-fullscreen" content="yes">
+   
+
+</head>
+<body>
+    <div class="container">
+
+        <!-- Фильтр тегов (скрыт по умолчанию) -->
+        <div class="tag-filter-container">
+            <div class="tag-filter-header">
+                <span class="filter-label">Фильтр цитат:</span>
+                <select id="tagFilterSelect" class="tag-select-dropdown">
+                    <option value="">Все теги</option>
+                    <!-- Теги будут добавлены динамически -->
+                </select>
+                <button class="reset-filter-btn" id="resetFilterBtn" title="Сбросить фильтр">
+                    ✕
+                </button>
+            </div>
+            <div class="tag-stats">
+                <span id="filterStats">Всего цитат: 0</span>
+                <span id="filterTagInfo" style="display: none;">Текущий тег: <span id="currentTagName"></span></span>
+            </div>
+        </div>
+
+        <!-- Основной контент -->
+        <main class="main-content">
+            <!-- Цитата дня -->
+            <div class="quote-of-day" id="quoteOfDay">
+                <div class="quote-header">
+                    <span class="badge">Цитата дня</span>
+                    <span class="date" id="currentDate"></span>
+                </div>
+                <div class="quote-content">
+                    <p class="quote-text" id="dailyQuoteText">Загрузка цитаты...</p>
+                    <p class="quote-author" id="dailyQuoteAuthor"></p>
+                </div>
+                <div class="quote-actions">
+                    <button class="action-btn" id="addToFavoritesBtn" title="Добавить в избранное">
+                        <span>❤️</span> 
+                    </button>
+                    <button class="action-btn" id="copyQuoteBtn" title="Копировать">
+                        <span>📋</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Все цитаты -->
+            <div class="all-quotes" id="allQuotesSection">
+                <h2>Все цитаты</h2>
+                <div class="quotes-list" id="quotesList">
+                    <!-- Цитаты будут загружены динамически -->
+                </div>
+            </div>
+        </main>
+
+       
+        <!-- Нижняя навигация -->
+        <nav class="bottom-nav">
+            <a href="index.html" class="nav-item active">
+                <span>🏠</span>
+                <span>Главная</span>
+            </a>
+            <a href="favorites.html" class="nav-item">
+                <span>⭐</span>
+                <span>Избранное</span>
+            </a>
+            <a href="profile-settings.html" class="nav-item">
+                <span>👤</span>
+                <span>Профиль</span>
+            </a>
+        </nav>
+
+
+
+    <script src="db.js"></script>
+    <script src="app.js"></script>
+    <script src="notifications.js"></script>
+    <script>
+        // Регистрация Service Worker для PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(function(registration) {
+                        console.log('ServiceWorker зарегистрирован');
+                    })
+                    .catch(function(err) {
+                        console.log('Ошибка регистрации ServiceWorker:', err);
+                    });
+            });
+        }
+
+        // Проверка первого запуска
+        window.addEventListener('load', async function() {
+            const db = await initDB();
+            const user = await db.getUser();
+            
+            if (!user || !user.selectedTags || user.selectedTags.length === 0) {
+                window.location.href = 'first-launch.html';
+                return;
+            }
+            
+            // Инициализация приложения
+            initApp();
+        });
+    </script>
+</body>
+</html>
